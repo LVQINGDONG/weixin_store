@@ -7,7 +7,6 @@
  */
 
 namespace app\api\validate;
-use think\Validate;
 
 class IDMustBePostiveInt extends BaseValidate
 {
