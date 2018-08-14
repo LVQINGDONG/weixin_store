@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 13, 2018 at 04:46 PM
+-- Generation Time: Aug 14, 2018 at 02:39 PM
 -- Server version: 10.1.33-MariaDB
 -- PHP Version: 7.2.6
 
@@ -21,6 +21,9 @@ SET time_zone = "+00:00";
 --
 -- Database: `zerg`
 --
+DROP DATABASE IF EXISTS `zerg`;
+CREATE DATABASE IF NOT EXISTS `zerg` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `zerg`;
 
 -- --------------------------------------------------------
 
@@ -28,6 +31,7 @@ SET time_zone = "+00:00";
 -- Table structure for table `banner`
 --
 
+DROP TABLE IF EXISTS `banner`;
 CREATE TABLE `banner` (
   `id` int(11) UNSIGNED NOT NULL,
   `name` varchar(50) CHARACTER SET utf8 DEFAULT NULL COMMENT 'banner的名称',
@@ -49,9 +53,10 @@ INSERT INTO `banner` (`id`, `name`, `description`, `delete_time`, `update_time`)
 -- Table structure for table `banner_item`
 --
 
+DROP TABLE IF EXISTS `banner_item`;
 CREATE TABLE `banner_item` (
   `id` int(11) UNSIGNED NOT NULL,
-  `img_id` int(11) NOT NULL COMMENT '外键，关联到image表',
+  `img_id` int(11) UNSIGNED NOT NULL COMMENT '外键，关联到image表',
   `key_word` varchar(100) NOT NULL COMMENT '记录点击banner之后要跳转的商品的id号',
   `type` tinyint(4) NOT NULL DEFAULT '1' COMMENT '跳转的类型，可能是上商品也可能是专题，1为商品',
   `delete_time` int(11) DEFAULT NULL,
@@ -69,6 +74,31 @@ INSERT INTO `banner_item` (`id`, `img_id`, `key_word`, `type`, `delete_time`, `b
 (3, 3, '3', 1, NULL, 1, NULL),
 (4, 4, '4', 1, NULL, 1, NULL);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `image`
+--
+
+DROP TABLE IF EXISTS `image`;
+CREATE TABLE `image` (
+  `id` int(11) UNSIGNED NOT NULL,
+  `url` varchar(100) CHARACTER SET utf8 NOT NULL,
+  `from` int(11) NOT NULL DEFAULT '1',
+  `delete_time` int(11) DEFAULT NULL,
+  `update_time` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `image`
+--
+
+INSERT INTO `image` (`id`, `url`, `from`, `delete_time`, `update_time`) VALUES
+(1, '/xxxx', 1, NULL, NULL),
+(2, '/xxxx', 1, NULL, NULL),
+(3, '/xxxx', 1, NULL, NULL),
+(4, '/xxxx', 1, NULL, NULL);
+
 --
 -- Indexes for dumped tables
 --
@@ -84,7 +114,15 @@ ALTER TABLE `banner`
 --
 ALTER TABLE `banner_item`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `banner_item_ibfk_1` (`banner_id`);
+  ADD KEY `banner_item_ibfk_1` (`banner_id`),
+  ADD KEY `img_id` (`img_id`);
+
+--
+-- Indexes for table `image`
+--
+ALTER TABLE `image`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id` (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -103,6 +141,12 @@ ALTER TABLE `banner_item`
   MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `image`
+--
+ALTER TABLE `image`
+  MODIFY `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
 -- Constraints for dumped tables
 --
 
@@ -110,7 +154,8 @@ ALTER TABLE `banner_item`
 -- Constraints for table `banner_item`
 --
 ALTER TABLE `banner_item`
-  ADD CONSTRAINT `banner_item_ibfk_1` FOREIGN KEY (`banner_id`) REFERENCES `banner_item` (`id`);
+  ADD CONSTRAINT `banner_item_ibfk_1` FOREIGN KEY (`banner_id`) REFERENCES `banner` (`id`),
+  ADD CONSTRAINT `banner_item_ibfk_2` FOREIGN KEY (`img_id`) REFERENCES `image` (`id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
